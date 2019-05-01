@@ -1,0 +1,26 @@
+//
+//  SDKIdentity-Prefix.pch
+//  SDKIdentity
+//
+//  Created by 程龙 on 2019/4/29.
+//  Copyright © 2019 Tobias Becker. All rights reserved.
+//
+
+#ifndef SDKIdentity_Prefix_pch
+#define SDKIdentity_Prefix_pch
+
+// Include any system framework and library headers here that should be included in all compilation units.
+// You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.
+#ifdef __OBJC__
+    #import <UIKit/UIKit.h>
+    #import <Foundation/Foundation.h>
+    //#import "NSString+Utility.h"
+#endif
+
+#ifndef DEBUG
+#import "codeObfuscation.h"
+#endif
+
+#define ErrLog(error) NSLog(@"\n\n### ERROR ###\nNSError occured here:\n[%@  %@] - %d \nError.code: \t\t%ld\nError.domain: \t\t%@\nError.description: \t%@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), __LINE__, (long)error.code, error.domain, error.localizedDescription)
+
+#endif /* SDKIdentity_Prefix_pch */

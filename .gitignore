@@ -1,0 +1,13 @@
+.idea/
+Pods
+Podfile.lock
+cmake-build-debug
+.DS_Store
+*.orig
+*.swp
+tmp
+build
+DerivedData
+*.pbxuser
+xcuserdata
+

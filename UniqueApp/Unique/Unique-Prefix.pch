@@ -13,7 +13,9 @@
 #ifdef __OBJC__
     #import <UIKit/UIKit.h>
     #import <Foundation/Foundation.h>
-    #import "NSString+Utility.h"
+    #ifndef DEBUG
+    #import "codeObfuscation.h"
+    #endif
 #endif
 
 #define ErrLog(error) NSLog(@"\n\n### ERROR ###\nNSError occured here:\n[%@  %@] - %d \nError.code: \t\t%ld\nError.domain: \t\t%@\nError.description: \t%@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), __LINE__, (long)error.code, error.domain, error.localizedDescription)

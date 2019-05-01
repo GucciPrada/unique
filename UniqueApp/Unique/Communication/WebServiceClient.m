@@ -227,7 +227,7 @@
             ErrLog(error);
             response = [NSDictionary dictionaryWithObjectsAndKeys:@YES, @"requestFailed", [NSString stringWithFormat:NSLocalizedString(@"Fehler beim Verarbeiten des Ergebnisses: %@", @"Fehler beim Verarbeiten des Ergebnisses: %@"), error.localizedDescription], @"errorDescription", nil];
         } else {
-            [[Fingerprint sharedFingerprint] setIsSent:YES];
+            //[[Fingerprint sharedFingerprint] setIsSent:YES];
             // Teile AppDelegate mit, dass gesendet wurde
             [(AppDelegate *)[[UIApplication sharedApplication] delegate] setApplicationState:ApplicationStateSent];
         }

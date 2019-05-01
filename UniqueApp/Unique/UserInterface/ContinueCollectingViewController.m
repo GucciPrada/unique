@@ -14,9 +14,9 @@
 @implementation ContinueCollectingViewController
 
 - (IBAction)getSecondPart {
-    [[FingerprintCalculator sharedCalculator] calculateSecondPartWithCompletionHandler:^{
-        [self performSegueWithIdentifier:@"showResults" sender:nil];
-    }];
+//    [[FingerprintCalculator sharedCalculator] calculateSecondPartWithCompletionHandler:^{
+//        [self performSegueWithIdentifier:@"showResults" sender:nil];
+//    }];
 }
 
 - (void)viewDidLoad

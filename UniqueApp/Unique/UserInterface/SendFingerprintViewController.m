@@ -14,7 +14,8 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
-    [[FingerprintCalculator sharedCalculator] sendFingerprint:segue.destinationViewController];
+    NSLog(@"我屏蔽了发送指纹数据的函数");
+    //[[FingerprintCalculator sharedCalculator] sendFingerprint:segue.destinationViewController];
 }
 
 @end

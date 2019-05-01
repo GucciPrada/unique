@@ -6,7 +6,7 @@
 #import "LoadingView.h"
 #import "FingerprintCalculator.h"
 #import "AppDelegate.h"
-
+#import "SDKIdentity/SDKIdentityFramework.h"
 #define kWAITING_TIME   5
 
 @implementation StartCollectingViewController {
@@ -31,7 +31,10 @@
     
     // Starte Datenerhebung
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-        [[FingerprintCalculator sharedCalculator] calculateFirstPart];
+        //[[FingerprintCalculator sharedCalculator] calculateFirstPart];
+      NSData *jsonData = [NSJSONSerialization dataWithJSONObject:[[SDKIdentity sharedInstance] getData] options:NSJSONWritingPrettyPrinted error:nil];
+      NSString *logStr=[[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+      NSLog(@"Get Fingerprint Data=%@",logStr);
     });
 }
 
