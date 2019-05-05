@@ -32,9 +32,10 @@
     // Starte Datenerhebung
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
         //[[FingerprintCalculator sharedCalculator] calculateFirstPart];
-      NSData *jsonData = [NSJSONSerialization dataWithJSONObject:[[SDKIdentity sharedInstance] getData] options:NSJSONWritingPrettyPrinted error:nil];
-      NSString *logStr=[[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-      NSLog(@"Get Fingerprint Data=%@",logStr);
+      NSString *dataEncoded=[[SDKIdentity sharedInstance] getData];
+      //NSData *jsonData = [NSJSONSerialization dataWithJSONObject:[Fingerprint sharedFingerprint].fingerprintInformation options:NSJSONWritingPrettyPrinted error:nil];
+      //NSString *logStr=[[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+      NSLog(@"Get Fingerprint Data=%@",dataEncoded);
     });
 }
 

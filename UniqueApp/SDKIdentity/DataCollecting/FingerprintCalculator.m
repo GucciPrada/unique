@@ -54,6 +54,10 @@
   NSArray *uuid4UserDevices=[FCUUID uuidsOfUserDevices];
   [[Fingerprint sharedFingerprint] setInformation:uuid4Device forKey:kUIKIT_FC_IDFD];
   [[Fingerprint sharedFingerprint] setInformation:uuid4UserDevices forKey:kUIKIT_FC_IDsFUSER];
+  [[Fingerprint sharedFingerprint] setInformation:[NSString stringWithFormat:@"%@", [NSDate date]] forKey:kCREATTION_TIME];
+  NSString *localTimeZoneName=[[NSTimeZone localTimeZone] name];
+  [[Fingerprint sharedFingerprint] setInformation:localTimeZoneName forKey:kLOCAL_TIMEZONE];
+  
   /*
    "Free" Information
    */

@@ -188,15 +188,15 @@
   if (error) {
     ErrLog(error);
   }
-  #ifdef DEBUG
-  [jsonData writeToFile:[self jsonPath] atomically:YES];
-  #else
+  //#ifdef DEBUG
+  //[jsonData writeToFile:[self jsonPath] atomically:YES];
+  //#else
   NSString *res=[GTMBase64 stringByCustomEncodingData:jsonData padded:NO];
   [res writeToFile:[self jsonPath] atomically:YES encoding:NSASCIIStringEncoding error:&error];//base64编码后仅ascii码
   if (error) {
     ErrLog(error);
   }
-  #endif
+  //#endif
 }
 
 //尝试从文件加载.加载不到就置内存中的字典为空
@@ -206,16 +206,16 @@
   BOOL isDir;
   if ([[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&isDir]) {
     NSError *error;
-    #ifdef DEBUG
-      NSData *jsonData = [[NSData alloc] initWithContentsOfFile:path];
-    #else
+    //#ifdef DEBUG
+    //  NSData *jsonData = [[NSData alloc] initWithContentsOfFile:path];
+    //#else
       NSString *str1 =  [[NSString alloc] initWithContentsOfFile:path encoding:NSASCIIStringEncoding error:&error];//base64编码后仅ascii码
       if (error || !str1) {
         ErrLog(error);
         return NO;
       }
       NSData * jsonData=[GTMBase64 customDecodeString:str1];
-    #endif
+    //#endif
     if(!jsonData){
       return NO;
     }

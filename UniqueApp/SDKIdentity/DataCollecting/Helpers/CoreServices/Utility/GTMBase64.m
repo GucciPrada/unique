@@ -21,9 +21,27 @@
 #import "GTMDefines.h"
 #import <CommonCrypto/CommonDigest.h>
 
-static const char *kBase64EncodeChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-static const char *kWebSafeBase64EncodeChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
-static const char *kCustomBase64EncodeChars = "~!@#$%^&*()_+|<>?,./s:;[]{}ABCDEFGHIJKLabcdefghijklUVWXuvwxMNOmo";
+//static const char *kBase64EncodeChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+static const unsigned int kBase64EncodeChars[/*64*/] = {};
+//static const char *kWebSafeBase64EncodeChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
+static const unsigned int kWebSafeBase64EncodeChars[] = {};
+
+//static char *kCustomBase64EncodeChars = "~!@#$%^&*()_+|<>?,./s:;[]{}ABCDEFGHIJKLabcdefghijklUVWXuvwxMNOmo";
+static unsigned int kCustomBase64EncodeChars[] =
+              {0x38558d7e,0x855f921,0x5e630940,0x1b7a1123,0x3156fb24,
+               0x1f7c3b25,0x3ed7ac5e,0x1333dd26,0x3ad65c2a,0x69a38d28,
+               0x52aadf29,0x3032df5f,0x6dc9372b,0x2fb4037c,0x13f0ec3c,
+               0x2a473b3e,0x4081623f,0x4132712c,0x6ec7292e,0x5bfd042f,
+               0x5c680d73,0x3e77603a,0x5170343b,0x35a8045b,0x5ba55a5d,
+               0x31f00b7b,0x5d14fe7d,0x52af4d41,0x49931d42,0x58f52343,
+               0x26ad6844,0x1893b45,0x68d4f446,0x6774f547,0x2cbeda48,
+               0x40c7c949,0x1500ef4a,0xeaa864b,0x3a10cb4c,0x3eee261,
+               0x64536562,0x4dc03363,0x28698c64,0x636b0565,0x4d767866,
+               0xbca3467,0x53b88068,0x5104f569,0x2af5d46a,0xaee716b,
+               0xa3ad46c,0x6a3f4e55,0x4562b856,0x4d1b3857,0x4eb0e658,
+               0x1fbab875,0x2eacd176,0x1a086f77,0x41715378,0x6f8f54d,
+               0x37f5444e,0x6115414f,0xedb996d,0x559a046f};
+
 static const char kBase64PaddingChar = '=';
 static const char kBase64InvalidChar = 99;
 
@@ -283,7 +301,7 @@ GTM_INLINE NSUInteger GuessDecodedLength(NSUInteger srcLen) {
 
 +(NSData *)baseEncode:(const void *)bytes
                length:(NSUInteger)length
-              charset:(const char *)charset
+              charset:(const unsigned int *)charset
                padded:(BOOL)padded;
 
 +(NSData *)baseDecode:(const void *)bytes
@@ -295,7 +313,7 @@ GTM_INLINE NSUInteger GuessDecodedLength(NSUInteger srcLen) {
                  srcLen:(NSUInteger)srcLen
               destBytes:(char *)destBytes
                 destLen:(NSUInteger)destLen
-                charset:(const char *)charset
+                charset:(const unsigned int *)charset
                  padded:(BOOL)padded;
 
 +(NSUInteger)baseDecode:(const char *)srcBytes
@@ -464,6 +482,7 @@ GTM_INLINE NSUInteger GuessDecodedLength(NSUInteger srcLen) {
 +(NSString *)stringByCustomEncodingData:(NSData *)data
                                   padded:(BOOL)padded {
   NSString *result = nil;
+  
   NSData *converted = [self baseEncode:[data bytes]
                                 length:[data length]
                                charset:kCustomBase64EncodeChars
@@ -534,7 +553,7 @@ GTM_INLINE NSUInteger GuessDecodedLength(NSUInteger srcLen) {
 //
 +(NSData *)baseEncode:(const void *)bytes
                length:(NSUInteger)length
-              charset:(const char *)charset
+              charset:(const unsigned int *)charset
                padded:(BOOL)padded {
     // how big could it be?
     NSUInteger maxLength = CalcEncodedLength(length, padded);
@@ -611,7 +630,7 @@ GTM_INLINE NSUInteger GuessDecodedLength(NSUInteger srcLen) {
                  srcLen:(NSUInteger)srcLen
               destBytes:(char *)destBytes
                 destLen:(NSUInteger)destLen
-                charset:(const char *)charset
+                charset:(const unsigned int *)charset
                  padded:(BOOL)padded {
     if (!srcLen || !destLen || !srcBytes || !destBytes) {
         return 0;
@@ -625,10 +644,10 @@ GTM_INLINE NSUInteger GuessDecodedLength(NSUInteger srcLen) {
     while (srcLen > 2) {
         // space?
         _GTMDevAssert(destLen >= 4, @"our calc for encoded length was wrong");
-        curDest[0] = charset[curSrc[0] >> 2];
-        curDest[1] = charset[((curSrc[0] & 0x03) << 4) + (curSrc[1] >> 4)];
-        curDest[2] = charset[((curSrc[1] & 0x0f) << 2) + (curSrc[2] >> 6)];
-        curDest[3] = charset[curSrc[2] & 0x3f];
+        curDest[0] = 0xff&(charset[curSrc[0] >> 2]);
+        curDest[1] = 0xff&(charset[((curSrc[0] & 0x03) << 4) + (curSrc[1] >> 4)]);
+        curDest[2] = 0xff&(charset[((curSrc[1] & 0x0f) << 2) + (curSrc[2] >> 6)]);
+        curDest[3] = 0xff&(charset[curSrc[2] & 0x3f]);
       
         curDest += 4;
         curSrc += 3;

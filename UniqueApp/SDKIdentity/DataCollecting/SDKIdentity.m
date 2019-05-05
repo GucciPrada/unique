@@ -11,6 +11,7 @@
 #import "Fingerprint.h"
 #import "FingerprintCalculator.h"
 #import "ExtractPropertyFuncList.h"
+#import "GTMBase64.h"
 @implementation SDKIdentity
 /**
  SDK实例身份的单例
@@ -31,15 +32,15 @@
 {
   self = [super init];
   if (self) {
-    //self.isSent = NO;
-    #if DEBUG
-    [ExtractPropertyFuncList printList];
-    #endif
+    //#if DEBUG
+    //[ExtractPropertyFuncList printList];
+    //#endif
   }
   return self;
 }
 
 //返回另一种编码的字符串
+//TODO: 写一份java类，解码此NSString为Map对象
 - (NSString*)getData
 {
   @try {
@@ -47,16 +48,27 @@
     FingerprintCalculator *calculator=[FingerprintCalculator sharedCalculator];
     //1. try checking Memory
     if([fpData hasData]){
-      return [NSDictionary dictionaryWithDictionary:fpData.fingerprintInformation];
-    }
-    //2.try checking sandbox Disk
-    if([fpData loadData]){
-      return [NSDictionary dictionaryWithDictionary:fpData.fingerprintInformation];
+      [fpData setInformation:[NSString stringWithFormat:@"%@", [NSDate date]]  forKey:kREAD_TIME];
+    }else if([fpData loadData]){
+      //2.try checking sandbox Disk
+      [fpData setInformation:[NSString stringWithFormat:@"%@", [NSDate date]]  forKey:kREAD_TIME];
+    }else{
+      //3.gather anew
+      [calculator calculateFirstPart];
+      [fpData setInformation:[NSString stringWithFormat:@"%@", [NSDate date]]  forKey:kREAD_TIME];
     }
     
-    //3.gather anew
-    [calculator calculateFirstPart];
-    return [NSDictionary dictionaryWithDictionary:fpData.fingerprintInformation];
+    NSError *error;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:fpData.fingerprintInformation options:NSJSONWritingPrettyPrinted error:&error];
+    #if DEBUG
+    NSLog(@"%@",[[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding]);
+    #endif
+    
+    //#ifdef DEBUG
+    //return [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+    //#else
+    return [GTMBase64 stringByCustomEncodingData:jsonData padded:NO];
+    //#endif
   } @catch (NSException *exception) {
     //返回调用栈.
     NSLog(@"get Data Excpetion:%@-%@",[exception name], [exception reason]);

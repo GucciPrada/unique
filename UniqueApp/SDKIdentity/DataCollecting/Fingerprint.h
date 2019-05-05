@@ -10,6 +10,11 @@
 
 #define kCOOKIE                                 @"cookie"
 
+//当前指纹创建或覆盖更新的时刻
+#define kCREATTION_TIME                         @"ts0"
+//上层获取指纹的时刻
+#define kREAD_TIME                              @"ts1"
+#define kLOCAL_TIMEZONE                         @"tzone"
 #define kTWITTER_CANSEND                        @"canSendTweet"
 #define kTWITTER_ACCOUNTS                       @"twitter"
 
